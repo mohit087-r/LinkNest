@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import SearchBar from './SearchBar'
 import userPng from '../../public/images/user-1.png'
 import Logo from '../../public/images/LinkNest_logo_1.jpg'
 import { MdOutlineLightMode } from "react-icons/md";
+import Menu from './Menu';
 
 const Header = () => {
+    const [openMenu, setMenu] = useState(false);
     return (
-        <div  className='border-[#e5e7eb] border-b py-3'>
+        <div className='border-[#e5e7eb] border-b py-3'>
             <div className='flex transition-all duration-300 justify-between items-center px-2 sm:px-10 lg:px-20'>
                 <div>
                     <img
@@ -25,6 +27,7 @@ const Header = () => {
                         <MdOutlineLightMode size={25} className='text-neutral-700' />
                     </button>
                     <button
+                        onClick={() => setMenu(!openMenu)}
                         className="cursor-pointer active:scale-90 transition-transform duration-100"
                     >
                         <img
@@ -35,9 +38,17 @@ const Header = () => {
                     </button>
                 </div>
             </div>
+
             <div className='block md:hidden px-2 sm:px-10 lg:px-20 mt-2'>
-                    <SearchBar />
-                </div>
+                <SearchBar />
+            </div>
+            {
+                openMenu &&
+                <div
+                className="absolute md:top-17 sm:top-15 top-13 lg:right-20 sm:right-10 right-2 bg-white lg:shadow-lg rounded-lg sm:w-[250px] w-[200px] z-50"
+            ><Menu /></div>
+
+            }
         </div>
 
     )
