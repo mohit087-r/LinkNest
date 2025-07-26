@@ -6,11 +6,10 @@ const AddLink = () => {
     return (
         <button
   className="text-white hover:bg-[#f57d06e3] bg-[#f57c06] active:scale-95 transition-all duration-150 
-             px-4 py-2 flex items-center gap-2 font-medium 
-            rounded-md shadow-sm cursor-pointer"
+             p-3 flex items-center gap-2 font-medium 
+            rounded-full shadow-sm cursor-pointer text-md sm:text-5xl"
 >
-  <FaPlus size={19} />
-  Add Link
+  <FaPlus />
 </button>
 
 
