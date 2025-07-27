@@ -1,0 +1,53 @@
+import React from 'react';
+import { Pencil, Trash2 } from 'lucide-react';
+import { RiLinksFill } from 'react-icons/ri';
+
+const BookMark = () => {
+  const bookmark = {
+    title: "How to Learn React",
+    url: "https://reactjs.org",
+    category: "Frontend",
+    addedOn: "Jul 21, 2025",
+    description: "A complete guide to learn React from scratch."
+  };
+
+  return (
+    <div className="bg-white border-2 border-gray-200 rounded-xl px-4 sm:px-6 py-4">
+      
+      {/* First Row: Title and Actions */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800">{bookmark.title}</h2>
+          <p className="text-sm text-gray-600 mt-1">{bookmark.description}</p>
+        </div>
+
+        <div className="flex items-center gap-2 mt-2 sm:mt-0">
+          <a
+            href={bookmark.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm px-3 py-1.5 border border-gray-200 hover:border-orange-300 text-gray-400 hover:text-orange-500 rounded hover:bg-orange-100 flex items-center gap-1"
+          >
+            <RiLinksFill size={17} />
+          </a>
+          <button className="text-sm px-3 py-1.5 border border-gray-200 hover:border-blue-300 text-gray-400 hover:text-blue-600 rounded hover:bg-blue-100 flex items-center gap-1">
+            <Pencil size={16} />
+          </button>
+          <button className="text-sm px-3 py-1.5 border border-gray-200 hover:border-red-300 text-gray-400 hover:text-red-600 rounded hover:bg-red-100 flex items-center gap-1">
+            <Trash2 size={16} />
+          </button>
+        </div>
+      </div>
+
+      {/* Second Row: Category and Date */}
+      <div className="flex justify-between items-center mt-3 flex-wrap gap-y-2">
+        <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+          #{bookmark.category}
+        </span>
+        <span className="text-xs text-gray-400">Added on: {bookmark.addedOn}</span>
+      </div>
+    </div>
+  );
+};
+
+export default BookMark;

@@ -53,7 +53,7 @@ const CategoryFilter = ({ selectedCategory, onCategoryChange }) => {
         {/* Scrollable Category List */}
         <div
           ref={scrollRef}
-          className='flex items-center gap-2 px-2 sm:px-4 md:px-6 h-9 sm:h-12 bg-white border-2 border-[#e5e7eb] rounded-lg overflow-x-auto scroll-smooth no-scrollbar'
+          className='flex items-center gap-2 pl-2 pr-12 h-9 sm:h-12 bg-white border-2 border-[#e5e7eb] rounded-lg overflow-x-auto scroll-smooth no-scrollbar'
         >
           {categories.map((category) => (
             <button

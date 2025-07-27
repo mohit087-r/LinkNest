@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import AddLink from '../Components/AddLink'
 import CategoryFilter from '../Components/CategoryFilter'
+import BookMark from '../Components/BookMark';
 
 const Home = () => {
     const [selectedCategory, setSelectedCategory] = useState('All');
@@ -19,6 +20,11 @@ const Home = () => {
                 <div className='absolute top-28.5 sm:top-33 md:top-22 right-3 sm:right-10 lg:right-20'>
                     <AddLink/>
                 </div>
+            </div>
+
+            <div className='grid gap-2 mt-20 mx-5 sm:mx-10 md:mx-20 lg:mx-30 xl:mx-50'>
+                <BookMark/>
+                <BookMark/>
             </div>
         </div>
     )
