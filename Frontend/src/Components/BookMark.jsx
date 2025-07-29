@@ -2,14 +2,7 @@ import React from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
 import { RiLinksFill } from 'react-icons/ri';
 
-const BookMark = () => {
-  const bookmark = {
-    title: "How to Learn React",
-    url: "https://reactjs.org",
-    category: "Frontend",
-    addedOn: "Jul 21, 2025",
-    description: "A complete guide to learn React from scratch."
-  };
+const BookMark = ({title, description, url, category, addedOn}) => {
 
   return (
     <div className="bg-white border-2 border-gray-200 rounded-xl px-4 sm:px-6 py-4">
@@ -17,13 +10,13 @@ const BookMark = () => {
       {/* First Row: Title and Actions */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-lg font-semibold text-gray-800">{bookmark.title}</h2>
-          <p className="text-sm text-gray-600 mt-1">{bookmark.description}</p>
+          <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
+          <p className="text-sm text-gray-600 mt-1">{description}</p>
         </div>
 
         <div className="flex items-center gap-2 mt-2 sm:mt-0">
           <a
-            href={bookmark.url}
+            href={url}
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm px-3 py-1.5 border border-gray-200 hover:border-orange-300 text-gray-400 hover:text-orange-500 rounded hover:bg-orange-100 flex items-center gap-1"
@@ -42,9 +35,9 @@ const BookMark = () => {
       {/* Second Row: Category and Date */}
       <div className="flex justify-between items-center mt-3 flex-wrap gap-y-2">
         <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-          #{bookmark.category}
+          #{category}
         </span>
-        <span className="text-xs text-gray-400">Added on: {bookmark.addedOn}</span>
+        <span className="text-xs text-gray-400">Added on: {addedOn}</span>
       </div>
     </div>
   );

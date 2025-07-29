@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { addBookmark } from '../api/bookmarkApi';
 import { IoClose } from 'react-icons/io5';
+import { toast } from 'react-toastify';
+import Loader from './Loader';
 
-const AddBookmarkForm = ({close}) => {
+const AddBookmarkForm = ({close, fetchData}) => {
   const [formData, setFormData] = useState({
     title: '',
     url: '',
@@ -18,20 +20,28 @@ const AddBookmarkForm = ({close}) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData.url);
-    console.log(formData.category);
-    console.log(formData.description);
-    console.log(formData.title);
 
+    if (!formData.title || !formData.url || !formData.description || !formData.category) {
+      toast.error("All fields are required!")
+      return
+    }
 
     setLoading(true);
     try {
       const res = await addBookmark(formData);
-      console.log('Success:', res);
-      alert('✅ Bookmark Added');
+      if(res.success){
+        toast.success(res.message);
+        fetchData();
+        close()
+      }
+
+      if(res.error){
+        toast.error(res.message);
+      }
+      
       setFormData({ title: '', url: '', description: '', category: '' });
     } catch (err) {
-      alert(err.message || '❌ Failed to add bookmark');
+      toast.error(err || err.message);
     } finally {
       setLoading(false);
     }
@@ -106,7 +116,9 @@ const AddBookmarkForm = ({close}) => {
       </div>
 
       {/* Submit Button */}
-      <button
+      {
+        loading ? <Loader/> :
+<button
         type="submit"
         disabled={loading}
         className={`py-2 rounded-md text-white font-medium transition-all bg-[#E57d06e3] hover:bg-[#f57d06e3]
@@ -114,6 +126,8 @@ const AddBookmarkForm = ({close}) => {
       >
         {loading ? 'Adding...' : 'Add Bookmark'}
       </button>
+      }
+      
     </form>
     </div>
     </section>

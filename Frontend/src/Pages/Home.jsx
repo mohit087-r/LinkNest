@@ -3,13 +3,38 @@ import AddLink from '../Components/AddLink'
 import CategoryFilter from '../Components/CategoryFilter'
 import BookMark from '../Components/BookMark';
 import AddBookmarkForm from '../Components/AddBookmarkForm';
+import { getAllBookmarks } from '../api/bookmarkApi';
+import { useEffect } from 'react';
+import Loader from '../Components/Loader';
 
 const Home = () => {
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [addBookMarkFormOpen, setAddBookMarkFormOpen] = useState(false);
+    const [bookmarks, setBookmarks] = useState([]);
+    const [loader, setLoader] = useState(false);
+
     const handleCategoryChange = (category) => {
         setSelectedCategory(category);
     };
+
+
+    const fetchData = async () => {
+        setLoader(true);
+        try {
+            const data = await getAllBookmarks();
+            console.log(data.data)
+            setBookmarks(data.data);
+        } catch (err) {
+            console.error("Failed to fetch bookmarks", err);
+        }
+        finally {
+            setLoader(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     return (
         <div className='bg-gray-100 h-screen p-2'>
@@ -19,17 +44,41 @@ const Home = () => {
                     onCategoryChange={handleCategoryChange}
                 />
                 <div className='absolute top-28.5 sm:top-33 md:top-22 right-3 sm:right-10 lg:right-20'>
-                    <AddLink setAddBookMarkFormOpen={setAddBookMarkFormOpen}/>
+                    <AddLink setAddBookMarkFormOpen={setAddBookMarkFormOpen}
+
+                    />
                 </div>
             </div>
 
-            <div className='grid gap-2 mt-10 sm:mt-20 mx-5 sm:mx-10 md:mx-20 lg:mx-30 xl:mx-50'>
-                <BookMark/>
-                <BookMark/>
-            </div>
-
             {
-                addBookMarkFormOpen && <AddBookmarkForm close={() => setAddBookMarkFormOpen(false)}/>
+                loader ?
+                    <div className='mt-60'>
+                        <Loader />
+                    </div> : (
+                        <div className='grid gap-2 mt-10 sm:mt-20 mx-5 sm:mx-10 md:mx-20 lg:mx-30 xl:mx-50'>
+                            {bookmarks.length > 1 && bookmarks.map((b) => (
+                                <BookMark
+                                    key={b._id} // Use a unique key here (e.g., MongoDB _id)
+                                    title={b.title}
+                                    description={b.description}
+                                    url={b.url}
+                                    category={b.category}
+                                    addedOn={new Date(b.addedOn).toLocaleString("en-IN", {
+                                        dateStyle: "medium",
+                                        timeStyle: "short",
+                                    })}
+                                />
+                            ))}
+                        </div>
+                    )
+            }
+            
+            {
+                addBookMarkFormOpen &&
+                <AddBookmarkForm
+                    close={() => setAddBookMarkFormOpen(false)}
+                    fetchData={fetchData}
+                />
             }
         </div>
     )
