@@ -8,7 +8,7 @@ import Menu from './Menu';
 const Header = () => {
     const [openMenu, setMenu] = useState(false);
     return (
-        <div className='border-[#e5e7eb] border-b py-3'>
+        <div className='bg-white border-[#e5e7eb]  border-b py-3 sticky top-0 z-100'>
             <div className='flex transition-all duration-300 justify-between items-center px-2 sm:px-10 lg:px-20'>
                 <div>
                     <img

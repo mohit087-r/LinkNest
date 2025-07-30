@@ -5,7 +5,9 @@ const BookmarkModel = require("../Models/Bookmark.js");
 // Get all bookmarks
 router.get("/", async (req, res) => {
   const bookmarks = await BookmarkModel.find();
-  res.json(bookmarks);
+  res.status(200).json({
+    data: bookmarks
+  })
 });
 
 // Create bookmark
@@ -13,17 +15,28 @@ router.post("/", async (req, res) => {
   try {
     const { title, url, description, category } = req.body;
 
-    // Server-side manual validation (optional, mongoose bhi karega)
     if (!title || !url || !description || !category) {
-      return res.status(400).json({ message: "All fields are required!" });
+      return res.status(400).json({ 
+        message: "All fields are required!",
+        success : false,
+        error : true
+      });
     }
 
     const newBookmark = new BookmarkModel({ title, url, description, category });
     await newBookmark.save();
 
-    res.status(201).json({ message: "Bookmark saved successfully!" });
+    res.status(201).json({ 
+      message: "Bookmark saved successfully!",
+      success: true,
+      error : false 
+    });
   } catch (err) {
-    res.status(500).json({ message: "Error saving bookmark", error: err.message });
+    res.status(500).json({ 
+      message: "Interval server error",
+      success : false,
+      error : true
+    });
   }
 });
 
@@ -34,9 +47,31 @@ router.put("/:id", async (req, res) => {
 });
 
 // Delete bookmark
-router.delete("/:id", async (req, res) => {
-  await BookmarkModel.findByIdAndDelete(req.params.id);
-  res.json({ message: "Deleted" });
+router.delete('/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const deleted = await BookmarkModel.findByIdAndDelete(id);
+
+    if (!deleted) return res.status(404).json({ 
+      message: 'Bookmark not found', 
+      success : false,
+      error : true
+    });
+
+    res.json({ 
+      message: 'Deleted successfully',
+      success : true,
+      error : false 
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      message: 'Internal server error',
+      success : false,
+      error : true 
+    });
+  }
 });
+
 
 module.exports = router;

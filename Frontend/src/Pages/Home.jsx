@@ -37,7 +37,7 @@ const Home = () => {
     }, []);
 
     return (
-        <div className='bg-gray-100 h-screen p-2'>
+        <div className='bg-transparent p-2'>
             <div className=' flex justify-between items-center gap-5 rounded px-15 sm:px-35 lg:px-50 xl:px-80'>
                 <CategoryFilter
                     selectedCategory={selectedCategory}
@@ -58,6 +58,8 @@ const Home = () => {
                         <div className='grid gap-2 mt-10 sm:mt-20 mx-5 sm:mx-10 md:mx-20 lg:mx-30 xl:mx-50'>
                             {bookmarks.length > 1 && bookmarks.map((b) => (
                                 <BookMark
+                                    fetchData={fetchData}
+                                    id={b._id}
                                     key={b._id} // Use a unique key here (e.g., MongoDB _id)
                                     title={b.title}
                                     description={b.description}
@@ -72,7 +74,7 @@ const Home = () => {
                         </div>
                     )
             }
-            
+
             {
                 addBookMarkFormOpen &&
                 <AddBookmarkForm

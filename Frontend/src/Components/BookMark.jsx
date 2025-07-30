@@ -1,12 +1,34 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
 import { RiLinksFill } from 'react-icons/ri';
+import { deleteBookmark } from '../api/bookmarkApi';
+import { toast } from 'react-toastify';
+import ConfirmPopup from "./ConfirmPopup"; 
 
-const BookMark = ({title, description, url, category, addedOn}) => {
+const BookMark = ({ fetchData, id, title, description, url, category, addedOn }) => {
+  const [showPopup, setShowPopup] = useState(false);
+  const handleDelete = async () => {
+    try {
+      const res = await deleteBookmark(id);
+
+      if(res.success){
+        toast.success(res.message);
+        fetchData();
+        return;
+      }
+
+      if(res.error){
+        toast.error(res.message);
+      }
+    } catch (err) {
+      toast.error(err.message || 'Delete failed');
+    }
+  };
 
   return (
+    <div>
     <div className="bg-white border-2 border-gray-200 rounded-xl px-4 sm:px-6 py-4">
-      
+
       {/* First Row: Title and Actions */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
@@ -26,7 +48,9 @@ const BookMark = ({title, description, url, category, addedOn}) => {
           <button className="text-sm px-3 py-1.5 border border-gray-200 hover:border-blue-300 text-gray-400 hover:text-blue-600 rounded hover:bg-blue-100 flex items-center gap-1">
             <Pencil size={16} />
           </button>
-          <button className="text-sm px-3 py-1.5 border border-gray-200 hover:border-red-300 text-gray-400 hover:text-red-600 rounded hover:bg-red-100 flex items-center gap-1">
+          <button
+            onClick={() => setShowPopup(true)}
+            className="text-sm px-3 py-1.5 border border-gray-200 hover:border-red-300 text-gray-400 hover:text-red-600 rounded hover:bg-red-100 flex items-center gap-1">
             <Trash2 size={16} />
           </button>
         </div>
@@ -39,6 +63,18 @@ const BookMark = ({title, description, url, category, addedOn}) => {
         </span>
         <span className="text-xs text-gray-400">Added on: {addedOn}</span>
       </div>
+    </div>
+
+    { showPopup && 
+      
+        <ConfirmPopup
+          onClose={() => setShowPopup(false)}
+          onConfirm={handleDelete}
+          message="Do you really want to delete this bookmark?"
+        />
+      
+    }
+    
     </div>
   );
 };
