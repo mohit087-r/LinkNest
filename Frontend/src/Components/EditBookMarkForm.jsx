@@ -1,59 +1,70 @@
-import React, { useState } from 'react';
-import { addBookmark } from '../api/bookmarkApi';
-import { IoClose } from 'react-icons/io5';
-import { toast } from 'react-toastify';
-import Loader from './Loader';
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { updateBookmark } from "../api/bookmarkApi";
+import Loader from "./Loader";
+import { RxCross2 } from "react-icons/rx";
+import { IoClose } from "react-icons/io5";
 
-const AddBookmarkForm = ({ close, fetchData }) => {
+const EditBookmarkForm = ({ onClose, fetchData, bookmarkData }) => {
   const [formData, setFormData] = useState({
-    title: '',
-    url: '',
-    description: '',
-    category: ''
+    title: "",
+    description: "",
+    url: "",
+    category: "",
   });
 
+  const [initialData, setInitialData] = useState({});
+  const [isChanged, setIsChanged] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    setFormData(bookmarkData);
+    setInitialData(bookmarkData);
+  }, [bookmarkData]);
+
+  useEffect(() => {
+    const isEqual = JSON.stringify(formData) === JSON.stringify(initialData);
+    setIsChanged(!isEqual); // true if changed
+  }, [formData, initialData]);
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.title || !formData.url || !formData.description || !formData.category) {
-      toast.error("All fields are required!")
-      return
+      toast.error("Please fill in all fields");
+      return;
     }
 
-    setLoading(true);
     try {
-      const res = await addBookmark(formData);
+      setLoading(true);
+      const res = await updateBookmark(bookmarkData._id, formData);
+
       if (res.success) {
         toast.success(res.message);
         fetchData();
-        close()
+        onClose();
+      } else {
+        toast.error(res.message || "Update failed");
       }
-
-      if (res.error) {
-        toast.error(res.message);
-      }
-
-      setFormData({ title: '', url: '', description: '', category: '' });
     } catch (err) {
-      toast.error(err || err.message);
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section className="fixed top-23 left-0 right-0 bottom-0 md:inset-0  bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 px-4">
-      <div className="relative bg-white w-full max-w-md rounded-xl p-6 shadow-lg transition-all animate-fadeIn">
-        {/* Header */}
+    <div className="fixed z-10 top-23 left-0 right-0 bottom-0 md:inset-0 bg-black/50 bg-opacity-40 flex justify-center items-center">
+      <div className="w-[90%] sm:w-[450px] bg-white rounded-xl p-6 animate-fadeIn relative">
+
         <div className="flex items-center justify-between border-b pb-4">
-          <h2 className="text-xl font-semibold text-gray-800">Add Bookmark</h2>
-          <button onClick={close} className="text-gray-500 hover:text-red-500 transition">
+          <h2 className="text-xl font-semibold text-gray-800">Edit Bookmark</h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-red-500 transition">
             <IoClose size={26} />
           </button>
         </div>
@@ -120,18 +131,18 @@ const AddBookmarkForm = ({ close, fetchData }) => {
             loading ? <Loader /> :
               <button
                 type="submit"
-                disabled={loading}
-                className={`py-2 rounded-md text-white font-medium transition-all bg-[#E57d06e3] hover:bg-[#f57d06e3]
-        }`}
+                disabled={!isChanged}
+                className={`py-2 rounded-md font-medium transition-all ${isChanged ? "bg-[#E57d06e3] hover:bg-[#f57d06e3] text-white" : "bg-gray-200"} 
+        `}
               >
-                {loading ? 'Adding...' : 'Add'}
+                {loading ? 'Updating...' : 'Update'}
               </button>
           }
 
         </form>
       </div>
-    </section>
+    </div>
   );
 };
 
-export default AddBookmarkForm;
+export default EditBookmarkForm;

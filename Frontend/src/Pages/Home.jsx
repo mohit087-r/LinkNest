@@ -58,17 +58,9 @@ const Home = () => {
                         <div className='grid gap-2 mt-10 sm:mt-20 mx-5 sm:mx-10 md:mx-20 lg:mx-30 xl:mx-50'>
                             {bookmarks.length > 1 && bookmarks.map((b) => (
                                 <BookMark
-                                    fetchData={fetchData}
-                                    id={b._id}
+                                    fetchData={() => fetchData()}
                                     key={b._id} // Use a unique key here (e.g., MongoDB _id)
-                                    title={b.title}
-                                    description={b.description}
-                                    url={b.url}
-                                    category={b.category}
-                                    addedOn={new Date(b.addedOn).toLocaleString("en-IN", {
-                                        dateStyle: "medium",
-                                        timeStyle: "short",
-                                    })}
+                                    bookmarkData={b}
                                 />
                             ))}
                         </div>

@@ -12,6 +12,11 @@ export const addBookmark = async (bookmarkData) => {
   return res.data;
 };
 
+export const updateBookmark = async (id, data) => {
+  const res = await axios.put(`${API_BASE_URL}/${id}`, data);
+  return res.data;
+};
+
 export const deleteBookmark = async (id) => {
   const res = await axios.delete(`${API_BASE_URL}/${id}`);
   return res.data;
